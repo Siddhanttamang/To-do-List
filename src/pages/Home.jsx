@@ -1,35 +1,53 @@
 import  MovieCard  from "../compoments/MovieCard"
-import Example from "../pages/Example"
-import { useState } from "react"
+import { useState,useEffect } from "react"
+import { searchMovies,getPopularMovies } from "../services/api";
+import "../css/Home.css"
 function Home(){
-    const handleSearch=()=>{
-        alert("searching "+searchQuery)
-    }
+    
     const[searchQuery,setSearchQuery]=useState("");
-    const movies=[
-        {id:1,title:"John wick",release_date:"2022"},
-        {id:2,title:"Avengers",release_date:"2023"},
-        {id:3,title:"Naruto",release_date:"2020"},
-        {id:4,title:"Dune",release_date:"2021"}
-    ]
+    const[movies,setMovies]= useState([]);
+    const[error,setError]=useState(null);
+    const[loading,setLoading]=useState(true);
+    
+    useEffect(()=>{
+        const loadPopularMovies= async()=>{
+            try{
+                const popularMovies= await getPopularMovies();
+                setMovies(popularMovies);
+            }
+            catch(err){
+                setError("failed to load movies..");
+                console.log(err)
+
+
+            }finally{
+                setLoading(false)
+
+            }
+        }
+        loadPopularMovies()
+    },[]);
+    const handleSearch=(e)=>{
+        e.preventDefault();
+        alert("searching "+searchQuery);
+        setSearchQuery(searchQuery);
+    }
     return (
     <div className="home">
-        <div className="example">
-            <Example example={searchQuery}/>
-        </div>
         <form onSubmit={handleSearch} className="search-form">
             <input 
             type="text" 
             placeholder="Search for movies" 
             className="search-input"
+            value={searchQuery}
             onChange={(e)=>setSearchQuery(e.target.value)}
             />
-        <button className="search-button" type="button">Search</button>
+        <button className="search-button" type="submit">Search</button>
         </form>
         <div className="movie_grid">
-            {movies.map((movie) =>(
-                
-            <MovieCard movie={movie} key={movie.id}/>
+            {movies.map((movie) =>( 
+            movie.title.toLowerCase().startsWith(searchQuery)&&
+            (<MovieCard movie={movie} key={movie.id}/>)
             
             ))}
         </div>
