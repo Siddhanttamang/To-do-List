@@ -1,75 +1,37 @@
-import  MovieCard  from "../compoments/MovieCard"
-import { useState,useEffect } from "react"
-import { searchMovies,getPopularMovies } from "../services/api";
-import "../css/Home.css"
-function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+import {useState} from 'react'
+import '../css/home.css'
+import { useTodosContext } from '../contexts/TodosContext';
+function Home(){
+  const {todos,addTodo,removeFromTodos} = useTodosContext()
+  const [todo,setTodo]=useState("");
 
-  useEffect(() => {
-    const loadPopularMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-      } catch (err) {
-        console.log(err);
-        setError("Failed to load movies...");
-      } finally {
-        setLoading(false);
-      }
+
+  function createTodo(e){
+    e.preventDefault(); 
+    if (todo.trim() === "") return;
+
+    const newTodo = {
+      id: Date.now(), 
+      text: todo,
     };
+    addTodo(newTodo);
+    setTodo("");
 
-    loadPopularMovies();
-  }, []);
-
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return
-    if (loading) return
-
-    setLoading(true)
-    try {
-        const searchResults = await searchMovies(searchQuery)
-        setMovies(searchResults)
-        setError(null)
-    } catch (err) {
-        console.log(err)
-        setError("Failed to search movies...")
-    } finally {
-        setLoading(false)
-    }
-  };
-
-  return (
-    <div className="home">
-      <form onSubmit={handleSearch} className="search-form">
+  }
+    return <div className="todo-creation">
+        <form onSubmit={createTodo} className="todo-form">
         <input
           type="text"
-          placeholder="Search for movies..."
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Enter Todo"
+          className="todo-input"
+          value={todo}
+          onChange={(e) => setTodo(e.target.value)}
         />
-        <button type="submit" className="search-button">
-          Search
+        <button type="submit" className='todo-create'>
+          Create
         </button>
       </form>
-
-        {error && <div className="error-message">{error}</div>}
-
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="movies-grid">
-          {movies.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
-        </div>
-      )}
     </div>
-  );
-}
 
+}
 export default Home;
