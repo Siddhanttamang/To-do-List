@@ -1,23 +1,43 @@
-.todo-container{
-    display: flex;
-    width: 100%;
+.todo-container {
+  display: flex;
+  width: 100%;
 }
-.todo-card{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    height: 140px;
-    max-height:200px ;
-    background-color: rgb(82, 82, 82);
-    margin: 8px 0px;
-    padding: 20px;
-    border: 1px solid #ccc;
+
+.todo-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* keep top aligned */
+  width: 100%;
+  min-height: 120px;
+  background-color: rgb(82, 82, 82);
+  margin: 8px 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.todo-card:hover {
+  background: white;
+  color: rgb(82, 82, 82);
+}
+
+.todo-right {
+  display: flex;
+  flex-direction: column; /* date on top, button below */
+  align-items: flex-end;  /* right align */
+  gap: 8px;
+}
+
+
+.todo-delete-button{
+    border: 0px solid white;
+
+}
+.todo-delete-button:hover {
+  background-color: red;
+  border: 0px solid transparent;
+  
+}
+.todo-delete-button:focus{
     outline: none;
-    border-radius: 20px;
-}
-.todo-card:hover{
-    border-color: #007bff;
-    color: rgb(82, 82, 82);
-    background: white;
 }

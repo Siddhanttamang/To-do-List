@@ -5,13 +5,16 @@ const TodosContext= createContext();
 export const useTodosContext= ()=> useContext(TodosContext);
 
 export const TodosProvider= ({children})=>{
-    const[todos,setTodos]=useState([]);
-    useEffect(()=>{
-        const storedTodos= localStorage.getItem("todos");
-        if(storedTodos){
-            setTodos(JSON.parse(storedTodos));
-        }
-    },[]);
+    const [todos, setTodos] = useState(() => {
+    try {
+        const stored = localStorage.getItem("todos");
+        return stored && stored !== "undefined" ? JSON.parse(stored) : [];
+    } catch {
+        return [];
+    }
+    });
+
+
 
     
     useEffect(()=>{

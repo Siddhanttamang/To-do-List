@@ -2,7 +2,7 @@ import {useState} from 'react'
 import '../css/home.css'
 import { useTodosContext } from '../contexts/TodosContext';
 function Home(){
-  const {todos,addTodo,removeFromTodos} = useTodosContext()
+  const {addTodo} = useTodosContext()
   const [todo,setTodo]=useState("");
 
 
